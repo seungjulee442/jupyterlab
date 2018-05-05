@@ -1,0 +1,60 @@
+# COMP 554 Final Assignment
+# Seungju Lee
+# Implementation of Shanks babystep-giantstep
+## 5/4/2018
+## python 3.5.2
+
+
+from math import floor, sqrt
+
+
+
+def bsgs(g, h, p):
+
+    '''
+
+    Solve for x in h = g^x mod p given a prime p.
+
+    If p is not prime, do not use bsgs.
+
+    '''
+
+    n = 1 + floor(sqrt(p)) 
+    
+    L1 = []
+    L2 = []
+
+    # Store g^{0,1,...,n} (mod p) in L1.
+    
+    for i in range(0,n):
+        value =pow(g,i,p)
+        L1.append(value)
+        
+    # Store h*g^{0,-n,...,-n^2} (mod p) in L2.
+    # via Fermat's Little Theorem. a^(p-1)=1 mod p -> a*a^(p-2)=1 mod p.
+    
+    for j in range(0,n):
+        value = pow(g,j*n*(p-2),p)
+        L2.append(value)
+
+    # Search for equivalence and return x where g^x = h mod p.
+    
+    a = 0
+    b = 0
+    x = 0
+    for i in L1:
+        for j in L2:
+            a = L1.index(i) # a is an element of L1
+            b = L2.index(j) # b is an element of L2
+            if a == b: 
+                x= j*n + i 
+                return x
+                break
+                
+    # Solution not found
+    
+    return None
+
+
+
+print(bsgs(5, 30, 6))
